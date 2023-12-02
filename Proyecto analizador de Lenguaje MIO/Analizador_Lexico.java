@@ -1,6 +1,4 @@
-
-
-public class Analizador_Lexico {
+public class Analizador_Lexico{
 
     
 }

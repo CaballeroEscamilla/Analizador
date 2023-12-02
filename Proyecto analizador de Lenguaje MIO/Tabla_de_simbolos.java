@@ -1,3 +1,3 @@
-public class Tabla_de_simbolos {
+public class Tabla_de_simbolos{
     
 }

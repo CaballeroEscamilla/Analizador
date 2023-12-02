@@ -1,5 +1,3 @@
-
-
-public class Analizador_Sintactico {
+public class Analizador_Sintactico{
     
 }
