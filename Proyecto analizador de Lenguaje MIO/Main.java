@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class Main{
     public static void main(String[] args) {
         List<String> List = new ArrayList<>();
+        List<String> ListLex = new ArrayList<>();
         Lector reader = new Lector();
         Analizador_Lexico AnalizarLexi = new Analizador_Lexico();
     
@@ -13,6 +14,6 @@ public class Main{
             System.out.println(elemento);
         }
 
-        AnalizarLexi.AnalizarLex(List);
+        ListLex = AnalizarLexi.AnalizarLex(List);
     }
 }
