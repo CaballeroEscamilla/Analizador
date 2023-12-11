@@ -1,40 +1,50 @@
-import java.util.*;
+package analizador.sintactico.semantico.mio;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class Analizador_Lexico {
 
     public List<String> AnalizarLex(List<String> List) {
-        char[] LineCode;
-        char[] AnalizandoP;
         List<String> Elementoslex = new ArrayList<>();
 
         for (String Elemento : List) {
-            LineCode = Elemento.toCharArray();
-            AnalizandoP = new char[Elemento.length()]; // Inicializar AnalizandoP
-
-            for (int j = 0; j < Elemento.length(); j++) {
-                if (LineCode[j] != '#' && LineCode[j] != ' ') {
-                    AnalizandoP[j] = LineCode[j];
-                } else if (LineCode[j] == ' ') {
-                    Elementoslex.add(Comparar(AnalizandoP));
-                }
-            }
+            Elementoslex.addAll(Comparar(Elemento));
         }
+
         return Elementoslex;
     }
 
-    public String Comparar(char[] cadena) {
+    public List<String> Comparar(String elemento) {
         Tabla_de_simbolos Tabla = new Tabla_de_simbolos();
-        String add;
+        String[] palabras = elemento.split("\\s+");
+        List<String> result = new ArrayList<>();
 
-        if ((add = Tabla.verificarExistencia(cadena)) != null) {
-            return add;
-        } else if ((add = Tabla.verificarIdentificador(cadena)) != null) {
-            return add;
-        } else if ((add = Tabla.verificarLiteralesNum(cadena)) != null) {
-            return add;
-        } else if ((add = Tabla.verificarLiteralesTxt(cadena)) != null) {
-            return add;
+        for (String palabra : palabras) {
+            String add = Tabla.verificarExistencia(palabra);
+            if (add != null) {
+                result.add(add);
+            } else {
+                add = Tabla.verificarIdentificador(palabra); 
+                if (add != null) {
+                    result.add(add);
+                } else {
+                    add = Tabla.verificarLiteralesNum(palabra);
+                    if (add != null) {
+                        result.add(add);
+                    } else {
+                        add = Tabla.verificarLiteralesTxt(palabra); 
+                        if (add != null) {
+                            result.add(add);
+                        } else {
+                            result.add("Error: No hay coincidencia");
+                        }
+                    }
+                }
+            }
         }
-        return "Error: No hay coincidencia";
+        return result;
     }
 }
+
+
