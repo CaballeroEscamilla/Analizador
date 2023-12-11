@@ -1,40 +1,74 @@
-import java.util.*;
+package analizador.sintactico.semantico.mio;
 
-public class Analizador_Lexico {
+import java.util.List;
 
-    public List<String> AnalizarLex(List<String> List) {
-        char[] LineCode;
-        char[] AnalizandoP;
-        List<String> Elementoslex = new ArrayList<>();
+public class AnalizadorSintactico {
 
-        for (String Elemento : List) {
-            LineCode = Elemento.toCharArray();
-            AnalizandoP = new char[Elemento.length()]; // Inicializar AnalizandoP
+    private List<String> tokens;
+    private int index;
 
-            for (int j = 0; j < Elemento.length(); j++) {
-                if (LineCode[j] != '#' && LineCode[j] != ' ') {
-                    AnalizandoP[j] = LineCode[j];
-                } else if (LineCode[j] == ' ') {
-                    Elementoslex.add(Comparar(AnalizandoP));
-                }
-            }
-        }
-        return Elementoslex;
+    public AnalizadorSintactico(List<String> tokens) {
+        this.tokens = tokens;
+        this.index = 0;
     }
 
-    public String Comparar(char[] cadena) {
-        Tabla_de_simbolos Tabla = new Tabla_de_simbolos();
-        String add;
+    public boolean analizar() {
+        return programa() && match("FINPROG");
+    }
 
-        if ((add = Tabla.verificarExistencia(cadena)) != null) {
-            return add;
-        } else if ((add = Tabla.verificarIdentificador(cadena)) != null) {
-            return add;
-        } else if ((add = Tabla.verificarLiteralesNum(cadena)) != null) {
-            return add;
-        } else if ((add = Tabla.verificarLiteralesTxt(cadena)) != null) {
-            return add;
+    private boolean programa() {
+        return match("PROGRAMA") && match("[id]") && sents();
+    }
+
+    private boolean sents() {
+        return sent() && sents();
+    }
+
+    private boolean sent() {
+        if (match("[id]")) {
+            if (match("=")) {
+                return elem() && match("[op_ar]") && elem();
+            }
+            return true;
+        } else if (match("SI")) {
+            if (compara() && match("ENTONCES") && sents()) {
+                if (match("SINO")) {
+                    return sents() && match("FINSI");
+                }
+                return match("FINSI");
+            }
+            return false;
+        } else if (match("REPITE")) {
+            if (elem() && match("VECES") && sents()) {
+                return match("FINREP");
+            }
+            return false;
+        } else if (match("IMPRIME")) {
+            return elem();
+        } else if (match("LEE")) {
+            return match("[id]");
+        } else if (match("#")) {
+            //para revisar comentarios
+            return true;
         }
-        return "Error: No hay coincidencia";
+        return false;
+    }
+
+    private boolean elem() {
+        return match("[id]") || match("[val]");
+    }
+
+    private boolean compara() {
+        return match("[id]") && match("[op_rel]") && elem();
+    }
+
+    private boolean match(String expected) {
+        if (index < tokens.size() && tokens.get(index).equals(expected)) {
+            index++;
+            return true;
+        }
+        return false;
     }
 }
+
+
