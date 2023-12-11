@@ -12,7 +12,7 @@ public class AnalizadorSintactico {
         this.index = 0;
     }
 
-    public boolean analizar() {
+     public boolean analizar() {
         return programa() && match("FINPROG");
     }
 
@@ -70,5 +70,7 @@ public class AnalizadorSintactico {
         return false;
     }
 }
+
+
 
 
