@@ -1,39 +1,49 @@
 package analizador.sintactico.semantico.mio;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class Analizador_Lexico {
 
-    public List<String> AnalizarLex(List<String> List) {
-        List<String> Elementoslex = new ArrayList<>();
+    public List<String> AnalizarLex(List<String> list) {
+        List<String> tokensList = new ArrayList<>();
 
-        for (String Elemento : List) {
-            Elementoslex.addAll(Comparar(Elemento));
+        for (String line : list) {
+            tokensList.addAll(Comparar(line));
         }
 
-        return Elementoslex;
+        // Obtener el nombre del archivo
+        String NombreArchivo = "factorial.lex";
+        // Guardar la secuencia de tokens en un archivo
+        Escritor escritor = new Escritor();
+        escritor.escribir(NombreArchivo, tokensList);
+
+        // Notificar la generación del archivo
+        System.out.println("Se generó el archivo " + NombreArchivo + " en el dispositivo.");
+
+        return tokensList;
     }
 
-    public List<String> Comparar(String elemento) {
-        Tabla_de_simbolos Tabla = new Tabla_de_simbolos();
-        String[] palabras = elemento.split("\\s+");
+    public List<String> Comparar(String line) {
+        Tabla_de_simbolos tabla = new Tabla_de_simbolos();
+        String[] palabras = line.split("\\s+");
         List<String> result = new ArrayList<>();
 
         for (String palabra : palabras) {
-            String add = Tabla.verificarExistencia(palabra);
+            String add = tabla.verificarExistencia(palabra);
             if (add != null) {
                 result.add(add);
             } else {
-                add = Tabla.verificarIdentificador(palabra); 
+                add = tabla.verificarIdentificador(palabra);
                 if (add != null) {
                     result.add(add);
                 } else {
-                    add = Tabla.verificarLiteralesNum(palabra);
+                    add = tabla.verificarLiteralesNum(palabra);
                     if (add != null) {
                         result.add(add);
                     } else {
-                        add = Tabla.verificarLiteralesTxt(palabra); 
+                        add = tabla.verificarLiteralesTxt(palabra);
                         if (add != null) {
                             result.add(add);
                         } else {
@@ -46,5 +56,3 @@ public class Analizador_Lexico {
         return result;
     }
 }
-
-
