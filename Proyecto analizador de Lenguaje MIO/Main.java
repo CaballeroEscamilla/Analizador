@@ -1,7 +1,21 @@
+package analizador.sintactico.semantico.mio;
 
-public class Main {
+import java.util.List;
+import java.util.ArrayList;
+
+public class Main{
     public static void main(String[] args) {
+        List<String> List = new ArrayList<>();
+        List<String> ListLex = new ArrayList<>();
         Lector reader = new Lector();
-        reader.read();
+        Analizador_Lexico AnalizarLexi = new Analizador_Lexico();
+    
+        
+        List = reader.read();
+        for (String elemento : List) {
+            System.out.println(elemento);
+        }
+
+        ListLex = AnalizarLexi.AnalizarLex(List);
     }
 }
